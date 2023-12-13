@@ -1,0 +1,32 @@
+[
+  {
+    "id" : 1,
+    "name" : "Bilgilerim",
+    "image" : "person.crop.circle",
+    "destination" : "info"
+  },
+  {
+    "id" : 2,
+    "name" : "Bordro",
+    "image" : "calendar.badge.clock",
+    "destination" : "bordro"
+  },
+  {
+    "id" : 3,
+    "name" : "QR Oluştur",
+    "image" : "qrcode.viewfinder",
+    "destination" : "qrMaker"
+  },
+  {
+    "id" : 4,
+    "name" : "QR Tara",
+    "image" : "camera.viewfinder",
+    "destination" : "qrScanner"
+  },
+  {
+    "id" : 5,
+    "name" : "Ayarlar",
+    "image" : "gear",
+    "destination" : "settings"
+  }
+]
