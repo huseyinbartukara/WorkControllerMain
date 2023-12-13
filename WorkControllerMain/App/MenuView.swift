@@ -6,8 +6,14 @@
 //
 
 import SwiftUI
+import FirebaseFirestore
+import FirebaseFirestoreSwift
+import FirebaseAuth
 
 struct MenuView: View {
+    
+    
+    
     
     init() {
       // Large Navigation Title
@@ -25,9 +31,13 @@ struct MenuView: View {
                 }
             }.navigationTitle("Anasayfa")
                 
+                
             
         }
     }
+    
+    
+    
 }
 
 #Preview {

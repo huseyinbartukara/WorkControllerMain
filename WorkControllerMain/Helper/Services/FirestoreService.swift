@@ -11,27 +11,40 @@ import FirebaseFirestore
 import FirebaseFirestoreSwift
 import FirebaseAuth
 
-class FirestoreService : ObservableObject {
-    
-    private var currentUser = Auth.auth().currentUser?.uid
-    @Published var profile : Profile?
-    
-    func fetchDocument(documentID: String) {
-        let db = Firestore.firestore()
-        let documentReference = db.collection("profiles").document(documentID)
 
-        documentReference.getDocument { document, error in
-            if let document = document, document.exists {
-                let data = document.data()
-                let name = data?["name"] as? String ?? ""
-                let sicilNo = data?["sicilNo"] as? String ?? ""
 
-                DispatchQueue.main.async {
-                    self.profile = Profile(name: name, sicilNo: sicilNo, uid: Auth.auth().currentUser?.uid)
+struct MyDocument: Codable {
+    var uid: String
+    var name: String
+    var sicilNo : String
+    // Diğer özellikleri ekleyebilirsiniz.
+}
+
+class FirebaseService : ObservableObject {
+    static let shared = FirebaseService()
+
+        private init() {}
+
+        func fetchDocument(documentID: String, completion: @escaping (Result<MyDocument, Error>) -> Void) {
+            let db = Firestore.firestore()
+            let documentReference = db.collection("profiles").document(documentID)
+
+            documentReference.getDocument { document, error in
+                if let document = document, document.exists {
+                    do {
+                        let decodedDocument = try document.data(as: MyDocument.self)
+                        completion(.success(decodedDocument))
+                    } catch {
+                        completion(.failure(error))
+                    }
+                } else {
+                    if let error = error {
+                        completion(.failure(error))
+                    } else {
+                        let customError = NSError(domain: "", code: 404, userInfo: [NSLocalizedDescriptionKey: "Belge bulunamadı"])
+                        completion(.failure(customError))
+                    }
                 }
-            } else {
-                        print("Belge bulunamadı: \(error?.localizedDescription ?? "")")
             }
         }
-    }
 }

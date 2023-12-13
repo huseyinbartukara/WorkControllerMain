@@ -15,7 +15,9 @@ struct InfoView: View {
     private var currentUser = Auth.auth().currentUser?.uid
     let db = Firestore.firestore()
     
-    @EnvironmentObject private var firestoreService : FirestoreService
+    @State private var document: MyDocument?
+    @State private var documentID: String = Auth.auth().currentUser!.uid
+   
     
     
     var body: some View {
@@ -26,11 +28,11 @@ struct InfoView: View {
                     CardView()
                     HStack(spacing: 20){
                         VStack(alignment: .leading){
-                            Text("Hüseyin Bartu Kara")
+                            Text(document?.name ?? "vay")
                                 .font(.system(size: 25))
                                 .fontWeight(.bold)
                                 .foregroundStyle(.appBackground)
-                            Text("1821012031")
+                            Text(document?.sicilNo ?? "vay")
                                 .font(.system(size: 20))
                                 .foregroundStyle(.appBackground)
                         }
@@ -39,14 +41,26 @@ struct InfoView: View {
                             .foregroundStyle(.appBackground)
                     }
                 }
+                Spacer()
                 
             }
-        }.onAppear{
-            //FirestoreService().fetchDocument(documentID: currentUser ?? "")
+        }.onAppear {
+            fetchDocument()
         }
     }
     
     
+        func fetchDocument() {
+                FirebaseService.shared.fetchDocument(documentID: documentID) { result in
+                    switch result {
+                    case .success(let fetchedDocument):
+                        self.document = fetchedDocument
+                    case .failure(let error):
+                        print("Hata: \(error.localizedDescription)")
+                    }
+                }
+            }
+        
     
     
 }
@@ -54,3 +68,6 @@ struct InfoView: View {
 #Preview {
     InfoView()
 }
+
+
+
